@@ -21,8 +21,8 @@ st.set_page_config(page_title="Requisitos Contractuales", layout="wide")
 st.title("📄 Detección Automática de Requisitos Contractuales en Minutas")
 
 # Cargar vectorizadores
-vectorizador_tfidf = joblib.load("vectorizador_tfidf.pkl")
-modelo_w2v = Word2Vec.load("word2vec_global.model")
+vectorizador_tfidf = joblib.load(""modelos_finales/vectorizador_tfidf.pkl"")
+modelo_w2v = Word2Vec.load("modelos_finales/modelo_word2vec.model")
 
 # Mapas de modelos por etiqueta
 etiquetas_tfidf = ["Retención en garantía", "Gastos reembolsables", "Cláusula de Cesión", "Socialización", "Subcontratación","Uso de opción", "Reajuste salarial",  "GAB-F-213", "GAB-F-214", "GAB-F-221", "Reunión de inicio"]
@@ -66,7 +66,7 @@ if archivo:
         nombre_archivo = f"modelo_{unidecode(etiqueta.lower().replace(' ', '_'))}.pkl"
         modelo = joblib.load(os.path.join("modelos_finales", nombre_archivo))
         pred = modelo.predict(X_tfidf)[0]
-        resultados[etiqueta] = "✅ Identificado en el texto" if pred == 1 else "❌ No Identificado en el texto"
+        resultados[etiqueta] = "✅ Requisito Identificado" if pred == 1 else "❌ Requisito No Identificado"
 
     # Clasificación con Word2Vec
     X_w2v = vector_promedio(texto_proc, modelo_w2v, dimension=100).reshape(1, -1)
@@ -74,9 +74,11 @@ if archivo:
         nombre_archivo = f"modelo_{unidecode(etiqueta.lower().replace(' ', '_'))}.pkl"
         modelo = joblib.load(os.path.join("modelos_finales", nombre_archivo))
         pred = modelo.predict(X_w2v)[0]
-        resultados[etiqueta] = "✅ Identificado en el texto" if pred == 1 else "❌ No Identificado en el texto"
+        resultados[etiqueta] = "✅ Requisito Identificado" if pred == 1 else "❌ Requisito No Identificado"
 
     # Mostrar resultados
-    st.subheader("📌 Resultados de Clasificación")
-    for etiqueta, resultado in resultados.items():
-        st.markdown(f"**{etiqueta}:** {resultado}")
+   import pandas as pd
+
+    # Convertir el diccionario en DataFrame
+    df_resultados = pd.DataFrame(list(resultados.items()), columns=["Requisito", "Resultado"])
+    st.table(df_resultados)
