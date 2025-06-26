@@ -21,7 +21,7 @@ st.set_page_config(page_title="Requisitos Contractuales", layout="wide")
 st.title("📄 Detección Automática de Requisitos Contractuales en Minutas")
 
 # Cargar vectorizadores
-#vectorizador_tfidf = joblib.load(""modelos_finales/vectorizador_tfidf.pkl"")
+#vectorizador_tfidf = joblib.load("modelos_finales/vectorizador_tfidf.pkl")
 #modelo_w2v = Word2Vec.load("modelos_finales/modelo_word2vec.model")
 
 # Mapas de modelos por etiqueta
