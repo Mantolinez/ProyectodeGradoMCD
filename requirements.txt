@@ -1,6 +1,6 @@
 streamlit
 joblib
-gensim
+gensim==4.1.2
 nltk
 numpy
 PyPDF2
