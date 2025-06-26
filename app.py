@@ -9,7 +9,7 @@ Original file is located at
 
 import streamlit as st
 import joblib
-#from gensim.models import Word2Vec
+from gensim.models import Word2Vec
 import numpy as np
 import PyPDF2
 import os
@@ -22,11 +22,11 @@ st.title("📄 Detección Automática de Requisitos Contractuales en Minutas")
 
 # Cargar vectorizadores
 vectorizador_tfidf = joblib.load("modelos_finales/vectorizador_tfidf.pkl")
-#modelo_w2v = Word2Vec.load("modelos_finales/modelo_word2vec.model")
+modelo_w2v = Word2Vec.load("modelos_finales/modelo_word2vec.model")
 
 # Mapas de modelos por etiqueta
 etiquetas_tfidf = ["Retención en garantía", "Gastos reembolsables", "Cláusula de Cesión", "Socialización", "Subcontratación","Uso de opción", "Reajuste salarial",  "GAB-F-213", "GAB-F-214", "GAB-F-221", "Reunión de inicio"]
-#etiquetas_w2v = ["GAB-F-105","Garantías y seguros","Reajuste de tarifas y precios" ]
+etiquetas_w2v = ["GAB-F-105","Garantías y seguros","Reajuste de tarifas y precios" ]
 
 # Funciones auxiliares
 def extraer_texto_pdf(uploaded_file):
@@ -43,10 +43,10 @@ def preprocesar_texto(texto):
     texto = " ".join(texto.split())
     return texto
 
-#def vector_promedio(doc, modelo, dimension=100):
-  #  tokens = word_tokenize(doc)
-   # vectores = [modelo.wv[word] for word in tokens if word in modelo.wv]
-    #return np.mean(vectores, axis=0) if vectores else np.zeros(dimension)
+def vector_promedio(doc, modelo, dimension=100):
+    tokens = word_tokenize(doc)
+    vectores = [modelo.wv[word] for word in tokens if word in modelo.wv]
+    return np.mean(vectores, axis=0) if vectores else np.zeros(dimension)
 
 # Subida de archivo
 archivo = st.file_uploader("Adjunta una minuta en formato PDF", type=["pdf"])
@@ -69,12 +69,12 @@ if archivo:
         resultados[etiqueta] = "✅ Requisito Identificado" if pred == 1 else "❌ Requisito No Identificado"
 
     # Clasificación con Word2Vec
-    #X_w2v = vector_promedio(texto_proc, modelo_w2v, dimension=100).reshape(1, -1)
-    #for etiqueta in etiquetas_w2v:
-     #   nombre_archivo = f"modelo_{unidecode(etiqueta.lower().replace(' ', '_'))}.pkl"
-      #  modelo = joblib.load(os.path.join("modelos_finales", nombre_archivo))
-       # pred = modelo.predict(X_w2v)[0]
-        #resultados[etiqueta] = "✅ Requisito Identificado" if pred == 1 else "❌ Requisito No Identificado"
+    X_w2v = vector_promedio(texto_proc, modelo_w2v, dimension=100).reshape(1, -1)
+    for etiqueta in etiquetas_w2v:
+        nombre_archivo = f"modelo_{unidecode(etiqueta.lower().replace(' ', '_'))}.pkl"
+        modelo = joblib.load(os.path.join("modelos_finales", nombre_archivo))
+        pred = modelo.predict(X_w2v)[0]
+        resultados[etiqueta] = "✅ Requisito Identificado" if pred == 1 else "❌ Requisito No Identificado"
 
     # Mostrar resultados
     import pandas as pd
