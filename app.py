@@ -77,8 +77,8 @@ if archivo:
         #resultados[etiqueta] = "✅ Requisito Identificado" if pred == 1 else "❌ Requisito No Identificado"
 
     # Mostrar resultados
-   import pandas as pd
+import pandas as pd
 
-    # Convertir el diccionario en DataFrame
-    df_resultados = pd.DataFrame(list(resultados.items()), columns=["Requisito", "Resultado"])
-    st.table(df_resultados)
+# Convertir el diccionario en DataFrame
+df_resultados = pd.DataFrame(list(resultados.items()), columns=["Requisito", "Resultado"])
+st.table(df_resultados)
