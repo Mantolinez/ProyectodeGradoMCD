@@ -1,0 +1,7 @@
+streamlit
+scikit-learn
+joblib
+gensim
+nltk
+unidecode
+PyPDF2
