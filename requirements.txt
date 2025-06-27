@@ -5,3 +5,4 @@ nltk
 numpy
 PyPDF2
 unidecode
+scikit-learn
